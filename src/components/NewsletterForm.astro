@@ -5,6 +5,10 @@ interface Props {
   variant?: 'light' | 'dark';
 }
 
+/** Deployed Cloudflare Worker URL — change if you redeploy under a new name. */
+const NEWSLETTER_API_URL = 'https://pete-newsletter.syedzamin849.workers.dev/subscribe';
+const DEFAULT_LIST_ID = 'weekly';
+
 const {
   heading = 'Join the Newsletter',
   subtext = '[PLACEHOLDER: Short pitch for why people should subscribe. Replace with real copy.]',
@@ -12,6 +16,8 @@ const {
 } = Astro.props;
 
 const isDark = variant === 'dark';
+const formId = `newsletter-form-${variant}`;
+const statusId = `newsletter-status-${variant}`;
 ---
 
 <section
@@ -44,17 +50,21 @@ const isDark = variant === 'dark';
   </p>
 
   <form
+    id={formId}
     class:list={[
       'mt-8',
       isDark ? 'flex flex-col gap-3' : 'flex flex-col gap-3 sm:flex-row sm:items-end',
     ]}
     method="post"
-    action="#"
-    aria-describedby="newsletter-note"
+    action={NEWSLETTER_API_URL}
+    novalidate
+    aria-describedby={`newsletter-note ${statusId}`}
+    data-newsletter-api={NEWSLETTER_API_URL}
   >
+    <input type="hidden" name="listId" value={DEFAULT_LIST_ID} />
     <div class:list={[isDark ? 'w-full' : 'flex-1']}>
       <label
-        for="newsletter-email"
+        for={`newsletter-email-${variant}`}
         class:list={[
           'font-body text-sm font-medium',
           isDark ? 'sr-only' : 'mb-2 block text-black',
@@ -63,7 +73,7 @@ const isDark = variant === 'dark';
         Email address
       </label>
       <input
-        id="newsletter-email"
+        id={`newsletter-email-${variant}`}
         name="email"
         type="email"
         required
@@ -80,7 +90,7 @@ const isDark = variant === 'dark';
     <button
       type="submit"
       class:list={[
-        'bg-accent font-heading uppercase tracking-wide text-white transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+        'bg-accent font-heading uppercase tracking-wide text-white transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-60',
         isDark
           ? 'w-full px-8 py-3.5 text-lg font-bold focus-visible:ring-offset-2 focus-visible:ring-offset-black'
           : 'px-8 py-3 text-lg focus-visible:ring-offset-2 sm:shrink-0',
@@ -90,16 +100,77 @@ const isDark = variant === 'dark';
     </button>
   </form>
   <p
+    id={statusId}
+    class:list={[
+      'mt-3 font-body text-sm min-h-[1.25rem]',
+      isDark ? 'text-white' : 'text-black',
+    ]}
+    role="status"
+    aria-live="polite"
+  ></p>
+  <p
     id="newsletter-note"
     class:list={[
-      'mt-3 font-body text-xs',
+      'mt-1 font-body text-xs',
       isDark ? 'text-white/70' : 'text-black/50',
     ]}
   >
-    {
-      isDark
-        ? 'No spam. Unsubscribe at any time.'
-        : '[PLACEHOLDER: Form is front-end only — wire to your email provider later.]'
-    }
+    No spam. Unsubscribe at any time.
   </p>
 </section>
+
+<script define:vars={{ formId, statusId, NEWSLETTER_API_URL }}>
+  const form = document.getElementById(formId);
+  if (form && form.dataset.bound !== '1') {
+    form.dataset.bound = '1';
+    const statusEl = document.getElementById(statusId);
+    const button = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const emailInput = form.querySelector('input[name="email"]');
+      const listInput = form.querySelector('input[name="listId"]');
+      const email = emailInput?.value?.trim() ?? '';
+      const listId = listInput?.value?.trim() || 'weekly';
+
+      if (!email || !email.includes('@')) {
+        if (statusEl) statusEl.textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+      if (button) button.disabled = true;
+      if (statusEl) statusEl.textContent = 'Subscribing…';
+
+      try {
+        const res = await fetch(NEWSLETTER_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, listId }),
+        });
+        const data = await res.json();
+
+        if (res.ok && data?.ok) {
+          if (statusEl) {
+            statusEl.textContent =
+              data.message === 'Already subscribed'
+                ? "You're already on the list. Thanks!"
+                : "You're in — thanks for subscribing.";
+          }
+          form.reset();
+          if (listInput) listInput.value = listId;
+        } else if (statusEl) {
+          statusEl.textContent =
+            data?.error || 'Something went wrong. Please try again.';
+        }
+      } catch {
+        if (statusEl) {
+          statusEl.textContent =
+            'Could not reach the newsletter service. Please try again.';
+        }
+      } finally {
+        if (button) button.disabled = false;
+      }
+    });
+  }
+</script>

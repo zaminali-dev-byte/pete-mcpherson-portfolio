@@ -55,6 +55,48 @@ npm run build
 npx wrangler pages deploy dist --project-name=pete-mcpherson-portfolio
 ```
 
+## Newsletter (Cloudflare Worker + KV)
+
+Subscribers are stored in **Cloudflare KV** via a small Worker — no Mailchimp or other ESP.
+
+| Piece | Details |
+| ----- | ------- |
+| Worker | `workers/newsletter` — project name `pete-newsletter` |
+| Endpoint | `POST /subscribe` with JSON `{ "email", "listId" }` |
+| Default `listId` | `weekly` (hidden input in `NewsletterForm.astro`) |
+| KV binding | `NEWSLETTER_SUBSCRIBERS` |
+| Key format | `list:{listId}:email:{email}` |
+
+### Change the list ID
+
+1. Update the hidden `listId` input (or `DEFAULT_LIST_ID`) in `src/components/NewsletterForm.astro`.
+2. Rebuild and redeploy Pages.
+3. Optionally lock allowed `listId` values in the Worker later for production.
+
+### Deploy / update the Worker
+
+```bash
+cd workers/newsletter
+npx wrangler deploy
+```
+
+### View subscribers in the Cloudflare dashboard
+
+1. Open [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **KV**.
+2. Open the `NEWSLETTER_SUBSCRIBERS` namespace.
+3. Look for keys like `list:weekly:email:you@example.com`.
+4. Values are JSON: `{ "email", "listId", "subscribedAt" }`.
+
+You can also list keys with Wrangler:
+
+```bash
+npx wrangler kv key list --namespace-id=68933cd11ce4471a83605b3312fa91b6 --prefix="list:weekly:"
+```
+
+### Worker URL on the site
+
+`NewsletterForm.astro` posts to the deployed Worker URL (constant `NEWSLETTER_API_URL`). Update that constant if the Worker subdomain changes.
+
 ## Site structure
 
 - `/` — Home (hero + newsletter CTA + intro)
@@ -67,3 +109,4 @@ npx wrangler pages deploy dist --project-name=pete-mcpherson-portfolio
 - [Tailwind CSS](https://tailwindcss.com/) via `@tailwindcss/vite`
 - [`@astrojs/sitemap`](https://docs.astro.build/en/guides/integrations-guide/sitemap/)
 - Fonts: [Khand](https://www.fontshare.com/) + [Switzer](https://www.fontshare.com/) via Fontshare
+- Newsletter: Cloudflare Worker + KV (`workers/newsletter`)

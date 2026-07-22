@@ -1,0 +1,8 @@
+name = "pete-newsletter"
+main = "src/index.js"
+compatibility_date = "2025-07-01"
+workers_dev = true
+
+[[kv_namespaces]]
+binding = "NEWSLETTER_SUBSCRIBERS"
+id = "68933cd11ce4471a83605b3312fa91b6"
