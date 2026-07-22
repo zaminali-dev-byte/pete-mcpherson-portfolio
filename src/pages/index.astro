@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import NewsletterForm from '../components/NewsletterForm.astro';
+---
+
+<Layout
+  title="Pete McPherson — Home"
+  description="Entrepreneur, productivity expert, and founder helping ambitious people build better systems for success."
+>
+  <section class="bg-black">
+    <div class="mx-auto max-w-content px-6 pb-20 pt-12 sm:px-8 sm:pb-28 sm:pt-16">
+      <h1 class="font-heading text-5xl leading-[0.95] text-white sm:text-7xl md:text-8xl">
+        Pete McPherson
+      </h1>
+      <p class="mt-6 max-w-xl font-body text-lg leading-relaxed text-white/85 sm:text-xl">
+        Entrepreneur, productivity expert, and founder helping ambitious people build better
+        systems for success.
+      </p>
+
+      <div class="mt-16 flex justify-center sm:mt-20">
+        <NewsletterForm
+          variant="dark"
+          heading="Join My Newsletter"
+          subtext="Get weekly insights on productivity, business, and personal growth."
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white">
+    <div class="mx-auto max-w-content px-6 py-16 sm:px-8 sm:py-20">
+      <h2 class="font-heading text-3xl text-black sm:text-4xl md:text-5xl">
+        About My Work
+      </h2>
+      <p class="mt-5 max-w-2xl font-body text-base leading-relaxed text-black/80 sm:text-lg">
+        [PLACEHOLDER: Brief introduction about Pete's background, expertise, and current focus.
+        This should highlight his entrepreneurial journey, productivity insights, and what makes
+        him unique. Keep it concise but compelling - around 2-3 sentences.]
+      </p>
+    </div>
+  </section>
+</Layout>

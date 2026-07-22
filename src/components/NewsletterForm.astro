@@ -1,0 +1,105 @@
+---
+interface Props {
+  heading?: string;
+  subtext?: string;
+  variant?: 'light' | 'dark';
+}
+
+const {
+  heading = 'Join the Newsletter',
+  subtext = '[PLACEHOLDER: Short pitch for why people should subscribe. Replace with real copy.]',
+  variant = 'light',
+} = Astro.props;
+
+const isDark = variant === 'dark';
+---
+
+<section
+  class:list={[
+    'newsletter',
+    isDark
+      ? 'mx-auto w-full max-w-md text-center'
+      : 'border border-black bg-white px-6 py-10 sm:px-10',
+  ]}
+  aria-labelledby="newsletter-heading"
+>
+  <h2
+    id="newsletter-heading"
+    class:list={[
+      'font-heading leading-none',
+      isDark
+        ? 'text-3xl text-white sm:text-4xl'
+        : 'text-3xl text-black sm:text-4xl',
+    ]}
+  >
+    {heading}
+  </h2>
+  <p
+    class:list={[
+      'mt-3 font-body text-base',
+      isDark ? 'text-white/85' : 'max-w-xl text-black/75',
+    ]}
+  >
+    {subtext}
+  </p>
+
+  <form
+    class:list={[
+      'mt-8',
+      isDark ? 'flex flex-col gap-3' : 'flex flex-col gap-3 sm:flex-row sm:items-end',
+    ]}
+    method="post"
+    action="#"
+    aria-describedby="newsletter-note"
+  >
+    <div class:list={[isDark ? 'w-full' : 'flex-1']}>
+      <label
+        for="newsletter-email"
+        class:list={[
+          'font-body text-sm font-medium',
+          isDark ? 'sr-only' : 'mb-2 block text-black',
+        ]}
+      >
+        Email address
+      </label>
+      <input
+        id="newsletter-email"
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        placeholder={isDark ? 'Enter your email' : 'you@example.com'}
+        class:list={[
+          'w-full px-4 py-3 font-body text-base text-black focus:outline-none',
+          isDark
+            ? 'border-0 bg-white placeholder:text-black/40 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black'
+            : 'border border-black bg-white placeholder:text-black/40',
+        ]}
+      />
+    </div>
+    <button
+      type="submit"
+      class:list={[
+        'bg-accent font-heading uppercase tracking-wide text-white transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+        isDark
+          ? 'w-full px-8 py-3.5 text-lg font-bold focus-visible:ring-offset-2 focus-visible:ring-offset-black'
+          : 'px-8 py-3 text-lg focus-visible:ring-offset-2 sm:shrink-0',
+      ]}
+    >
+      Subscribe
+    </button>
+  </form>
+  <p
+    id="newsletter-note"
+    class:list={[
+      'mt-3 font-body text-xs',
+      isDark ? 'text-white/70' : 'text-black/50',
+    ]}
+  >
+    {
+      isDark
+        ? 'No spam. Unsubscribe at any time.'
+        : '[PLACEHOLDER: Form is front-end only — wire to your email provider later.]'
+    }
+  </p>
+</section>

@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+import NewsletterForm from '../components/NewsletterForm.astro';
+---
+
+<Layout
+  title="About — Pete McPherson"
+  description="[PLACEHOLDER: Meta description for the About page. Replace with a real summary of Pete's background.]"
+>
+  <article class="mx-auto max-w-content px-6 py-16 sm:px-8 sm:py-20">
+    <h1 class="font-heading text-5xl leading-none text-black sm:text-6xl md:text-7xl">
+      About
+    </h1>
+    <p class="mt-4 max-w-2xl font-body text-lg text-black/75">
+      [PLACEHOLDER: Subtitle for the About page — a single sentence framing Pete’s story.]
+    </p>
+
+    <div class="mt-12 flex flex-col gap-10 sm:flex-row sm:items-start sm:gap-12">
+      <img
+        src="/images/1.jpeg"
+        alt="Pete McPherson"
+        width="240"
+        height="300"
+        class="aspect-[4/5] w-full max-w-[240px] shrink-0 border border-black object-cover"
+      />
+      <div class="space-y-6 font-body text-base leading-relaxed text-black/80 sm:text-lg">
+        <p>
+          [PLACEHOLDER: Opening paragraph — early background, where Pete started, and what first
+          sparked interest in the work. Replace with real biography.]
+        </p>
+        <p>
+          [PLACEHOLDER: Middle paragraph — career path, key themes, collaborations, or a defining
+          project era. Keep it narrative and human; no real claims yet.]
+        </p>
+        <p>
+          [PLACEHOLDER: Closing paragraph — what Pete focuses on today, who this site is for, and how
+          the newsletter fits into staying in touch.]
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-20">
+      <NewsletterForm
+        heading="Stay in Touch"
+        subtext="[PLACEHOLDER: About-page newsletter pitch. Encourage readers who finished the story to subscribe.]"
+      />
+    </div>
+  </article>
+</Layout>

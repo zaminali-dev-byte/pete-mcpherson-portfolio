@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+import NewsletterForm from '../components/NewsletterForm.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const projects = [
+  {
+    title: 'Operating Cadence',
+    description:
+      'A weekly operating system for founders — templates, review rituals, and a lightweight scorecard that turns chaotic calendars into a repeatable rhythm. Built for small teams that want clarity without enterprise software.',
+  },
+  {
+    title: 'The Focus Letter',
+    description:
+      'A long-running newsletter on deep work, decision hygiene, and building businesses that don’t burn people out. Practical essays, one systems tweak per issue, and interviews with operators who ship consistently.',
+  },
+  {
+    title: 'Ship Week',
+    description:
+      'A five-day live cohort that helps ambitious builders finish one stalled project. Daily prompts, accountability pods, and a public demo at the end — designed for people who already know what to do but keep getting derailed.',
+  },
+  {
+    title: 'Priority Stack',
+    description:
+      'A simple planning tool that forces a hard ranking of the week’s work: one must-win outcome, three supporting moves, and everything else parked. Made for solo founders who drown in task lists that never prioritize.',
+  },
+  {
+    title: 'Builders Circle',
+    description:
+      'A private community for operators and creators swapping playbooks on product, audience, and sustainable output. Monthly roundtables, shared systems libraries, and peer reviews — less hype, more how we actually work.',
+  },
+  {
+    title: 'Second Brain Starter',
+    description:
+      'A self-paced course on capturing ideas, linking notes, and turning research into published work. Includes a starter vault structure, weekly capture habits, and a writing pipeline from inbox to finished draft.',
+  },
+];
+---
+
+<Layout
+  title="Projects — Pete McPherson"
+  description="Selected projects from Pete McPherson — systems, newsletters, courses, tools, and community work for ambitious builders."
+>
+  <section class="mx-auto max-w-content px-6 py-16 sm:px-8 sm:py-20">
+    <h1 class="font-heading text-5xl leading-none text-black sm:text-6xl md:text-7xl">
+      Projects
+    </h1>
+    <p class="mt-4 max-w-2xl font-body text-lg text-black/75">
+      A sample of systems, courses, tools, and community work — the kind of projects Pete builds
+      for founders and high-output creatives. Swap these for your real launches anytime.
+    </p>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2">
+      {
+        projects.map((project) => (
+          <ProjectCard title={project.title} description={project.description} />
+        ))
+      }
+    </div>
+
+    <div class="mt-20">
+      <NewsletterForm
+        heading="Follow New Work"
+        subtext="Get first look at new launches, systems experiments, and what’s shipping next."
+      />
+    </div>
+  </section>
+</Layout>

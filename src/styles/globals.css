@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --color-accent: #e10600;
+  --font-heading: "Khand", sans-serif;
+  --font-body: "Switzer", sans-serif;
+  --max-width-content: 56rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: #000000;
+    background-color: #ffffff;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid #000000;
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .text-accent {
+    color: var(--color-accent);
+  }
+
+  .bg-accent {
+    background-color: var(--color-accent);
+  }
+
+  .border-accent {
+    border-color: var(--color-accent);
+  }
+
+  .max-w-content {
+    max-width: var(--max-width-content);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
