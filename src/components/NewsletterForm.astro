@@ -5,8 +5,15 @@ interface Props {
   variant?: 'light' | 'dark';
 }
 
-/** Deployed Cloudflare Worker URL — change if you redeploy under a new name. */
-const NEWSLETTER_API_URL = 'https://pete-newsletter.syedzamin849.workers.dev/subscribe';
+/**
+ * Production: same-origin Pages Function (avoids CORS / ad-blockers on workers.dev).
+ * Local `astro dev`: Worker URL (localhost is allowed by Worker CORS).
+ */
+const WORKER_SUBSCRIBE_URL =
+  'https://pete-newsletter.syedzamin849.workers.dev/subscribe';
+const NEWSLETTER_API_URL = import.meta.env.DEV
+  ? WORKER_SUBSCRIBE_URL
+  : '/api/subscribe';
 const DEFAULT_LIST_ID = 'weekly';
 
 const {
@@ -148,7 +155,13 @@ const statusId = `newsletter-status-${variant}`;
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, listId }),
         });
-        const data = await res.json();
+
+        let data;
+        try {
+          data = await res.json();
+        } catch {
+          throw new Error('Invalid response from newsletter service');
+        }
 
         if (res.ok && data?.ok) {
           if (statusEl) {

@@ -55,17 +55,20 @@ npm run build
 npx wrangler pages deploy dist --project-name=pete-mcpherson-portfolio
 ```
 
-## Newsletter (Cloudflare Worker + KV)
+## Newsletter (Pages Function + Worker + KV)
 
-Subscribers are stored in **Cloudflare KV** via a small Worker — no Mailchimp or other ESP.
+Subscribers are stored in **Cloudflare KV** — no Mailchimp or other ESP.
 
 | Piece | Details |
 | ----- | ------- |
-| Worker | `workers/newsletter` — project name `pete-newsletter` |
-| Endpoint | `POST /subscribe` with JSON `{ "email", "listId" }` |
+| Production API | Same-origin Pages Function `POST /api/subscribe` (`functions/api/subscribe.js`) |
+| Worker (dev / fallback) | `workers/newsletter` — `pete-newsletter.syedzamin849.workers.dev` |
+| Body | JSON `{ "email", "listId" }` |
 | Default `listId` | `weekly` (hidden input in `NewsletterForm.astro`) |
-| KV binding | `NEWSLETTER_SUBSCRIBERS` |
+| KV binding | `NEWSLETTER_SUBSCRIBERS` (shared by Function + Worker) |
 | Key format | `list:{listId}:email:{email}` |
+
+The live form posts to `/api/subscribe` so the browser never depends on cross-origin CORS to `*.workers.dev`. Local `astro dev` still uses the Worker URL (CORS allows localhost).
 
 ### Change the list ID
 
@@ -80,7 +83,18 @@ cd workers/newsletter
 npx wrangler deploy
 ```
 
-### View subscribers in the Cloudflare dashboard
+### Deploy Pages (includes `/api/subscribe` Function)
+
+```bash
+npm run build
+npx wrangler pages deploy dist --project-name=pete-mcpherson-site
+```
+
+KV binding `NEWSLETTER_SUBSCRIBERS` is declared in the root `wrangler.toml`.
+
+### Worker URL (local / fallback)
+
+`NewsletterForm.astro` uses `/api/subscribe` in production builds and the Worker URL during `astro dev`.
 
 1. Open [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **KV**.
 2. Open the `NEWSLETTER_SUBSCRIBERS` namespace.
@@ -93,11 +107,7 @@ You can also list keys with Wrangler:
 npx wrangler kv key list --namespace-id=68933cd11ce4471a83605b3312fa91b6 --prefix="list:weekly:"
 ```
 
-### Worker URL on the site
-
-`NewsletterForm.astro` posts to the deployed Worker URL (constant `NEWSLETTER_API_URL`). Update that constant if the Worker subdomain changes.
-
-## Site structure
+### View subscribers in the Cloudflare dashboard
 
 - `/` — Home (hero + newsletter CTA + intro)
 - `/about` — About story placeholders + newsletter

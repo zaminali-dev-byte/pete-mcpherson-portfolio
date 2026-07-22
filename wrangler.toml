@@ -1,0 +1,9 @@
+# Cloudflare Pages project config (Git + `wrangler pages deploy`)
+name = "pete-mcpherson-site"
+compatibility_date = "2025-07-01"
+pages_build_output_dir = "dist"
+
+# Same KV namespace as workers/newsletter
+[[kv_namespaces]]
+binding = "NEWSLETTER_SUBSCRIBERS"
+id = "68933cd11ce4471a83605b3312fa91b6"
