@@ -4,6 +4,7 @@
  */
 
 const ALLOWED_ORIGINS = new Set([
+  'https://pete-mcpherson-site.pages.dev',
   'https://pete-mcpherson-portfolio-1lr.pages.dev',
   'http://localhost:4321',
   'http://127.0.0.1:4321',

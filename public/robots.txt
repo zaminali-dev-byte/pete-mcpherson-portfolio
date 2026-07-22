@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pete-mcpherson-portfolio-1lr.pages.dev/sitemap-index.xml
+Sitemap: https://pete-mcpherson-site.pages.dev/sitemap-index.xml

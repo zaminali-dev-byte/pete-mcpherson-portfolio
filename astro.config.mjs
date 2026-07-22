@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://pete-mcpherson-portfolio-1lr.pages.dev',
+  site: 'https://pete-mcpherson-site.pages.dev',
   output: 'static',
   vite: {
     plugins: [tailwindcss()],
